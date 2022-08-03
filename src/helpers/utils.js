@@ -1,4 +1,5 @@
 /* eslint-disable no-useless-escape */
+const murmur = require("murmurhash-js");
 
 function sluggify(string) {
   return string
@@ -12,16 +13,26 @@ function sluggify(string) {
     .replace(/-+$/, "");
 }
 
-function generateHashBuckets(experiment, users) {
-  console.log(experiment);
-  console.log(users);
+function randomColor() {
+  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+}
 
+function generateBucketIds(experiment, users) {
   for (let i = 0; i < users.length; i++) {
-    users[i].experiment = experiment;
+    users[i].experimentId = experiment.id;
+    users[i].experimentName = experiment.name;
+    users[i].isInExperiment = true;
+    // The main hashing algorithm to generate buckets is here!!....
+    // Generate hash by concatenating userId with experimentId
+    const hashValue = murmur.murmur3(users[i].id, experiment.id);
+    // Then get the ratio
+    const hashRatio = hashValue / Math.pow(2, 32);
+    // Then use the ratio to divide up the buckets
+    users[i].bucketId = parseInt(hashRatio * experiment.buckets, 10);
+    experiment.users.push(users[i]);
   }
 
-  return users;
-  //murmur.murmur3(key, seed);
+  return { theExperiment: experiment, theUsers: users };
 }
 
 function makeFake(length) {
@@ -51,7 +62,7 @@ function generateUUID() {
   return result;
 }
 
-function generateUsers(userAmount) {
+function generateFakeUsers(userAmount) {
   const users = [];
 
   for (let i = 0; i < userAmount; i++) {
@@ -60,6 +71,7 @@ function generateUsers(userAmount) {
       name: makeFake(6),
       bucketId: null,
       isInExperiment: false,
+      experimentName: null,
       experimentId: null
     };
     users.push(user);
@@ -70,8 +82,9 @@ function generateUsers(userAmount) {
 
 module.exports = {
   sluggify,
-  generateUsers,
+  generateFakeUsers,
   makeFake,
-  generateHashBuckets,
-  generateUUID
+  generateBucketIds,
+  generateUUID,
+  randomColor
 };

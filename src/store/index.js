@@ -1,21 +1,35 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import { generateUsers, generateUUID } from "../helpers/utils.js";
+import { generateFakeUsers, generateUUID } from "../helpers/utils.js";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     page: "experiments",
-    users: generateUsers(5000),
+    users: generateFakeUsers(500),
     experiments: [
       {
         id: generateUUID(),
         name: "First Example Experiment",
-        variantGroup: [],
+        treatmentGroups: [
+          {
+            id: generateUUID(),
+            name: "Control A - Shown the tour",
+            rangeEnd: 20,
+            rules: []
+          },
+          {
+            id: generateUUID(),
+            rangeEnd: 40,
+            name: "Control B - Not Shown Tour",
+            rules: []
+          }
+        ],
         buckets: 40,
         populationPercent: 100,
+        users: [],
         flipperName: "first-example-experiment"
       }
     ]
@@ -51,17 +65,24 @@ export default new Vuex.Store({
     CLEAR_EXPERIMENT(state){
       state.newexperiment = ''
     }*/
+    SET_PAGE(state, page) {
+      state.page = page;
+    },
     SAVE_EXPERIMENT(state, experiment) {
       if (!experiment.id) {
         experiment.id = generateUUID();
       }
       state.experiments.push(experiment);
     },
-    SET_PAGE(state, page) {
-      state.page = page;
-    },
     SET_USERS(state, users) {
       state.users = users;
+    },
+    SET_EXPERIMENTS(state, experiments) {
+      state.experiments = experiments;
+    },
+    SET_EXPERIMENT(state, experiment) {
+      const index = state.experiments.indexOf(experiment);
+      state.experiments[index] = experiment;
     }
   },
   actions: {

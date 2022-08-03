@@ -19,11 +19,11 @@
       </div>
     </div>
 
-    <h3 class="font-bold">Treatments / Variant Groups</h3>
+    <h3 class="font-bold">Treatment / Control Groups</h3>
     <div class="bg-gray-300 rounded-md p-8 text-center mb-6">
-      <template v-if="loadedExperiment.variants.length>0">
-        <div v-for="variant in loadedExperiments.variantGroups" :key="variant.id" class="text-white bg-grey-500 p-6">
-          {{ variant }}
+      <template v-if="loadedExperiment.treatmentGroups.length>0">
+        <div v-for="tg in loadedExperiments.treatmentGroups" :key="tg.id" class="text-white bg-grey-500 p-6">
+          {{ tg.name }}
         </div>
       </template>
       <template v-else>

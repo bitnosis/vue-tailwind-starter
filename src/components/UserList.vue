@@ -26,8 +26,12 @@
             <td class="py-4 px-6">
               {{ user.name }}
             </td>
-            <td v-if="user.experiment!=null">
-              {{ user.experiment }}
+            <td v-if="user.experimentId!=null">
+              <b>Experiment :</b>  {{ user.experimentName }}
+              <br />
+              <b>Bucket ID :</b> {{ user.bucketId }}
+              <br />
+              <b>Treatment :</b> : {{ getTreatmentGroup(user.experimentId, user.bucketId) }}
             </td>
             <td v-else class="text-center text-xs text-gray-600 uppercase"> Not In Experiment</td>
           </tr>
@@ -42,17 +46,40 @@
 export default {
   name: 'UserList',
   computed: {
+    experiments() {
+      return this.$store.getters.getExperiments;
+    },
     users() {
       return this.$store.getters.getUsers;
     }
   },
   methods:{
-    getTreatmentGroup(expId, variantId) {
-      return expId+'-'+variantId;
+    getTreatmentGroup(experimentId, bucketId) {
+      let groups = null;
+      for (let i = 0; i<this.experiments.length;i++) {
+        if (this.experiments[i].id===experimentId) {
+          groups = this.experiments[i].treatmentGroups;
+        }
+      }
+
+      if (groups!==null) {
+        for (const group of groups) {
+          if (bucketId < group.rangeEnd) {
+            return group.name;
+          }
+        }
+      }
+
+      return null;
     },
     resetUsers() {
       for (let i = 0;i<this.users.length;i++) {
-        this.users[i].experiment = null;
+        this.users[i].experimentId = null;
+        this.users[i].bucketId = null;
+        this.users[i].isInExperiment = false;
+      }
+      for (let i = 0; i<this.experiments.length;i++) {
+        this.experiments[i].users = [];
       }
       this.$dtoast.pop({
         preset: 'success',
@@ -60,6 +87,7 @@ export default {
         content:  'Please wait',
       });
       this.$store.commit('SET_USERS', this.users);
+      this.$store.commit('SET_EXPERIMENTS', this.experiments);
       this.$forceUpdate();
     }
   }
