@@ -1,6 +1,18 @@
 /* eslint-disable no-useless-escape */
 const murmur = require("murmurhash-js");
 
+const modalities = [
+  "practitioner",
+  "chiropractor",
+  "doctor",
+  "accupuncture",
+  "other",
+  "other_1",
+  "other_2"
+];
+
+const usage = ["heavy", "medium", "light", "rarely"];
+
 function makeFake(length) {
   let result = "";
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -10,6 +22,12 @@ function makeFake(length) {
   }
 
   return result;
+}
+
+function randomFromArray(array) {
+  const r = Math.floor(Math.random() * array.length);
+
+  return array[r - 1];
 }
 
 function generateUUID() {
@@ -35,6 +53,10 @@ function generateFakeUsers(userAmount) {
     const user = {
       id: generateUUID(),
       name: makeFake(6),
+      modality: randomFromArray(modalities),
+      usage: randomFromArray(usage),
+      revenue: Math.floor(Math.random() * 600000),
+      patient_count: Math.floor(Math.random() * 100),
       bucketId: null,
       isInExperiment: false,
       experimentName: null,
