@@ -15,29 +15,29 @@
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-900 uppercase bg-gray-300">
           <tr>
-            <th scope="col" class="py-3 px-6">
+            <th scope="col" class="py-2 px-4">
               Experiment Name
             </th>
-            <th scope="col" class="py-3 px-6">
+            <th scope="col" class="py-2 px-4">
               Treatment Groups
             </th>
-            <th scope="col" class="py-3 px-6">
+            <th scope="col" class="py-2 px-4">
               Buckets
             </th>
-            <th scope="col" class="py-3 px-6">
+            <th scope="col" class="py-2 px-4">
               Total Population Percentage
             </th>
-            <th scope="col" class="text-right py-3 px-6">
+            <th scope="col" class="text-right py-2 px-4">
               Actions
             </th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="exp in experiments" :key="exp.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            <th scope="row" class="py-1 px-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
               {{ exp.name }}
             </th>
-            <td class="py-4 px-6">
+            <td class="py-1 px-3">
               <template v-if="exp.treatmentGroups.length>0">
                 <div v-for="tg in exp.treatmentGroups" :key="tg.id" class="mb-1 text-xs text-gray-900">
                   <p><b>Name :</b> {{ tg.name }}</p>
@@ -45,10 +45,10 @@
                 </div>
               </template>
             </td>
-            <td class="py-4 px-6">
+            <td class="py-1 px-3">
               {{ exp.buckets }}
             </td>
-            <td class="py-4 px-6">
+            <td class="py-1 px-3">
               {{ exp.populationPercent }}% <span v-if="exp.users.length>0">  - <b>{{ exp.users.length }}<b /> Users in experiment</b></span>
             </td>
             <td>

@@ -15,33 +15,33 @@
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-900 uppercase bg-gray-300 ">
           <tr>
-            <th scope="col" class="py-3 px-6">
+            <th scope="col" class="py-3 px-4">
               User ID
             </th>
-            <th scope="col" class="py-3 px-6">
+            <th scope="col" class="py-3 px-4">
               User Name
             </th>
-            <th scope="col" class="text-center py-3 px-6">
+            <th scope="col" class="text-center py-3 px-4">
               Experiment
             </th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="user in theUsers" :key="user.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <th scope="row" class="py-4 px-6 text-xs text-gray-900 whitespace-nowrap dark:text-white">
+            <th scope="row" class="py-1 px-4 text-xs text-gray-900 whitespace-nowrap dark:text-white">
               {{ user.id }}
             </th>
-            <td class="py-4 px-6">
+            <td class="py-1 px-4">
               {{ user.name }}
             </td>
-            <td v-if="user.experimentId!=null">
+            <td v-if="user.experimentId!=null" class="text-xs py-1 px-4">
               <b>Experiment :</b>  {{ user.experimentName }}
               <br />
               <b>Bucket ID :</b> {{ user.bucketId }}
               <br />
               <b>Treatment Group :</b> : {{ getTreatmentGroup(user.bucketId) }}
             </td>
-            <td v-else class="text-center text-xs text-gray-600 uppercase"> Not In Experiment</td>
+            <td v-else class="py-1 px-4 text-center text-xs text-gray-600 uppercase"> Not In Experiment</td>
           </tr>
         </tbody>
       </table>
