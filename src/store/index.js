@@ -71,7 +71,7 @@ export default new Vuex.Store({
     SAVE_EXPERIMENT(state, experiment) {
       if (experiment.id === null) {
         experiment.id = generateUUID();
-        state.experiments[state.experiments.length + 1] = experiment;
+        state.experiments.push(experiment);
       } else {
         const index = state.experiments.indexOf(experiment);
         state.experiments[index] = experiment;

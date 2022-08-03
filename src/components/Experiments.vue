@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ experiments }}
     <div v-if="viewingList" class="overflow-x-auto relative">
       <div v-if="viewingUserList">
         <ExperimentUserList :users="viewingUserList" :experiment="viewExperiment" @closeUsers="closeUsers()" @resetUsers="resetUsers()" />
@@ -11,7 +10,7 @@
         <button type="submit" class="mt-6 text-white bg-blue-700 rounded-md shadow-md hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="addNewExperiment()">Create New Experiment</button>
       </div>
       <div v-if="loadedExperiment!==null" class="w-full">
-        <ExperimentForm :experiment="loadedExperiment" @cancel="handleCancel()" />
+        <ExperimentForm :experiment="loadedExperiment" @resetUsers="resetUsers()" @cancel="handleCancel()" />
       </div>
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-900 uppercase bg-gray-300">
@@ -77,7 +76,7 @@ import ExperimentForm from '../components/ExperimentForm';
 import ExperimentUserList from '../components/ExperimentUserList';
 import Loader from '../components/Loader';
 import { newExperiment } from '../helpers/data.js';
-import { generateBucketIds } from '../helpers/utils.js';
+import { generateBucketIds, generateUUID } from '../helpers/utils.js';
 
 export default {
   name: 'Experiments',
@@ -127,6 +126,9 @@ export default {
     },
     editExperiment(experiment) {
       this.loadedExperiment = experiment;
+      this.loadedExperiment.treatmentGroups[0].id = generateUUID();
+      this.loadedExperiment.treatmentGroups[1].id = generateUUID();
+
     },
     generateBuckets(experiment) {
       const that = this;
@@ -164,7 +166,11 @@ export default {
       });
       let e = experiment;
       if (experiment===null) {
-        e = this.viewExperiment;
+        if (this.viewExperiment===null) {
+          e = this.loadedExperiment;
+        } else {
+          e = this.viewExperiment;
+        }
       }
 
       for (let i = 0;i<this.users.length;i++) {

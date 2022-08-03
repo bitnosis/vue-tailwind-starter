@@ -64,7 +64,10 @@ function randomColor() {
 
 // MAIN HASHING FUNCTION - This is the money right here lol  :)  //
 function generateBucketIds(experiment, users) {
-  for (let i = 0; i < users.length; i++) {
+  const userPopulation = parseInt(
+    users.length * (experiment.populationPercent / 100)
+  );
+  for (let i = 0; i < userPopulation; i++) {
     users[i].experimentId = experiment.id;
     users[i].experimentName = experiment.name;
     users[i].isInExperiment = true;

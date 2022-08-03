@@ -10,8 +10,8 @@
         <input v-model="loadedExperiment.buckets" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required>
       </div>
       <div class="w-1/4">
-        <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300">Population Percentage</label>
-        <input v-model="loadedExperiment.populationPercent" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required>
+        <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300">Population Percentage ( % )</label>
+        <input v-model="loadedExperiment.populationPercent" type="number" max="100" min="1" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required>
       </div>
       <div class="w-1/4">
         <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300">Flipper Name</label>
@@ -73,6 +73,7 @@ export default {
       this.loadedExperiment.flipperName =   sluggify(this.loadedExperiment.name);
     },
     saveExperiment() {
+      const that = this;
       if (this.loadedExperiment.treatmentGroups.length<=1) {
         this.$dtoast.pop({
           preset: 'error',
@@ -88,12 +89,16 @@ export default {
         this.loadedExperiment.treatmentGroups[i].rangeEnd = parseInt(division * (i+1));
       }
       this.$store.commit('SAVE_EXPERIMENT', this.loadedExperiment);
+      this.$emit('resetUsers');
       this.$dtoast.pop({
         preset: 'success',
         heading: 'Experiment Saved!',
       });
       this.$emit('cancel');
-      this.loadedExperiment = null;
+      setTimeout(function() {
+        that.loadedExperiment = null;
+      },400);
+
     },
     removeTreatment(treatment) {
       this.loadedExperiment.treatmentGroups.splice(this.loadedExperiment.treatmentGroups.indexOf(treatment), 1);
