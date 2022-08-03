@@ -69,10 +69,13 @@ export default new Vuex.Store({
       state.page = page;
     },
     SAVE_EXPERIMENT(state, experiment) {
-      if (!experiment.id) {
+      if (experiment.id === null) {
         experiment.id = generateUUID();
+        state.experiments[state.experiments.length + 1] = experiment;
+      } else {
+        const index = state.experiments.indexOf(experiment);
+        state.experiments[index] = experiment;
       }
-      state.experiments.push(experiment);
     },
     SET_USERS(state, users) {
       state.users = users;

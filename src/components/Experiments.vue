@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ experiments }}
     <div v-if="viewingList" class="overflow-x-auto relative">
       <div v-if="viewingUserList">
         <ExperimentUserList :users="viewingUserList" :experiment="viewExperiment" @closeUsers="closeUsers()" @resetUsers="resetUsers()" />
@@ -39,9 +40,10 @@
             </th>
             <td class="py-4 px-6">
               <template v-if="exp.treatmentGroups.length>0">
-                <p v-for="tg in exp.treatmentGroups" :key="tg.id" class="text-xs text-gray-900 font-semibold">
-                  {{ tg.name }} <span v-if="exp.users.length>0"> {{ getTreatmentGroupCount(exp, tg) }}</span>
-                </p>
+                <div v-for="tg in exp.treatmentGroups" :key="tg.id" class="mb-1 text-xs text-gray-900">
+                  <p><b>Name :</b> {{ tg.name }}</p>
+                  <p v-if="exp.users.length>0" v-html="getTreatmentGroupCount(exp, tg)"></p>
+                </div>
               </template>
             </td>
             <td class="py-4 px-6">
@@ -115,7 +117,7 @@ export default {
         }
       }
 
-      return ' - '+count+' Users' + ' - ' + division+ ' Buckets';
+      return 'Users In Bucket - <b>'+count+ '</b> (' +parseInt(division)+ ' Buckets)';
     },
     handleCancel() {
       this.loadedExperiment = null;
