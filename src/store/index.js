@@ -13,7 +13,7 @@ export default new Vuex.Store({
   plugins: [vuexLocal.plugin],
   state: {
     page: "experiments",
-    users: generateFakeUsers(3000),
+    users: generateFakeUsers(1500),
     experiments: [
       {
         id: generateUUID(),
