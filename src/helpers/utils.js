@@ -2,13 +2,20 @@
 const murmur = require("murmurhash-js");
 
 const modalities = [
-  "practitioner",
-  "chiropractor",
-  "doctor",
-  "accupuncture",
-  "other",
-  "other_1",
-  "other_2"
+  { name: "Medical doctor", prob: 0.1 },
+  { name: "Naturopathic doctor", prob: 0.3 },
+  { name: "Certified nutritionist", prob: 0.1 },
+  { name: "Chiropractor", prob: 0.1 },
+  { name: "Licensed acupuncturist", prob: 0.2 },
+  { name: "Student", prob: 0.2 },
+  { name: "Integrative practitioner", prob: 0.4 },
+  { name: "Nurse practitioner", prob: 0.2 },
+  { name: "Registered dietitian", prob: 0.1 },
+  { name: "Registered midwife", prob: 0.1 },
+  { name: "Registered nurse", prob: 0.2 },
+  { name: "Registered pharmacist", prob: 0.1 },
+  { name: "Other", prob: 0.2 },
+  { name: "Osteopathic Physician", prob: 0.1 }
 ];
 
 const usage = ["heavy", "medium", "light", "rarely"];
@@ -24,10 +31,28 @@ function makeFake(length) {
   return result;
 }
 
+function weighted_random(options) {
+  let i;
+  const weights = [];
+  for (i = 0; i < options.length; i++) {
+    weights[i] = options[i].prob + (weights[i - 1] || 0);
+  }
+
+  const random = Math.random() * weights[weights.length - 1];
+
+  for (i = 0; i < weights.length; i++) {
+    if (weights[i] > random) {
+      break;
+    }
+  }
+
+  return options[i].name;
+}
+
 function randomFromArray(array) {
   const r = Math.floor(Math.random() * array.length);
 
-  return array[r - 1];
+  return array[r];
 }
 
 function generateUUID() {
@@ -53,7 +78,7 @@ function generateFakeUsers(userAmount) {
     const user = {
       id: generateUUID(),
       name: makeFake(6),
-      modality: randomFromArray(modalities),
+      modality: weighted_random(modalities),
       usage: randomFromArray(usage),
       revenue: Math.floor(Math.random() * 600000),
       patient_count: Math.floor(Math.random() * 100),

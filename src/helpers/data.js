@@ -12,13 +12,20 @@ const newExperiment = {
 };
 
 const modalities = [
-  "practitioner",
-  "chiropractor",
-  "doctor",
-  "accupuncture",
-  "other",
-  "other_1",
-  "other_2"
+  "Medical doctor",
+  "Naturopathic doctor",
+  "Certified nutritionist",
+  "Chiropractor",
+  "Licensed acupuncturist",
+  "Student",
+  "Integrative practitioner",
+  "Nurse practitioner",
+  "Registered dietitian",
+  "Registered midwife",
+  "Registered nurse",
+  "Registered pharmacist",
+  "Other",
+  "Osteopathic Physician"
 ];
 
 const usage = ["heavy", "medium", "light", "rarely"];
