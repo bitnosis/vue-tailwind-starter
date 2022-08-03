@@ -111,9 +111,9 @@ function randomColor() {
 
 // MAIN HASHING FUNCTION - This is the money right here lol  :)  //
 function generateBucketIds(experiment, users) {
-  let user_list = [];
+  const user_list = users;
   const g = experiment.treatmentGroups;
-
+  /*
   for (let i = 0; i < g.length; i++) {
     if (g[i].rules !== "" && g[i].rules != null) {
       const rules = JSON.parse(g[i].rules);
@@ -143,7 +143,7 @@ function generateBucketIds(experiment, users) {
     } else {
       user_list = users;
     }
-  }
+  }*/
 
   const userPopulation = parseInt(
     user_list.length * (experiment.populationPercent / 100)
