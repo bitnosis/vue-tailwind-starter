@@ -48,6 +48,18 @@
             <th scope="col" class="py-3 px-4">
               User Name
             </th>
+            <th scope="col" class="py-3  px-4">
+              Modality
+            </th>
+            <th scope="col" class="py-3  px-4">
+              Usage
+            </th>
+            <th scope="col" class="py-3  px-4">
+              Revenue
+            </th>
+            <th scope="col" class="py-3  px-4">
+              Patients
+            </th>
             <th scope="col" class="text-center py-3 px-4">
               Experiment
             </th>
@@ -60,6 +72,18 @@
             </th>
             <td class="py-1 px-4">
               {{ user.name }}
+            </td>
+            <td class="py-1 px-4">
+              {{ user.modality.toUpperCase() }}
+            </td>
+            <td class="py-1 px-4">
+              {{ user.usage.toUpperCase() }}
+            </td>
+            <td class="py-1 px-4">
+              ${{ user.revenue.toFixed(2) }}
+            </td>
+            <td class="py-1 px-4">
+              {{ user.patient_count }}
             </td>
             <td v-if="user.experimentId!=null" class="text-xs py-1 px-4">
               <b>Experiment :</b>  {{ user.experimentName }}

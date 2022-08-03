@@ -111,23 +111,57 @@ function randomColor() {
 
 // MAIN HASHING FUNCTION - This is the money right here lol  :)  //
 function generateBucketIds(experiment, users) {
+  let user_list = [];
+  const g = experiment.treatmentGroups;
+
+  for (let i = 0; i < g.length; i++) {
+    if (g[i].rules !== "" && g[i].rules != null) {
+      const rules = JSON.parse(g[i].rules);
+      if (rules.length > 0) {
+        for (let j = 0; j < rules.length; j++) {
+          switch (rules[j].type) {
+            case "modality":
+              for (let k = 0; k < users.length; k++) {
+                if (
+                  users[k].modality.toLowerCase() ===
+                  rules[j].value.toLowerCase()
+                ) {
+                  const index = user_list.indexOf(users[k]);
+                  if (index < 1) {
+                    user_list.push(users[k]);
+                  }
+                }
+              }
+              break;
+            case "revenue":
+              break;
+            case "patient_count":
+              break;
+          }
+        }
+      }
+    } else {
+      user_list = users;
+    }
+  }
+
   const userPopulation = parseInt(
-    users.length * (experiment.populationPercent / 100)
+    user_list.length * (experiment.populationPercent / 100)
   );
   for (let i = 0; i < userPopulation; i++) {
-    users[i].experimentId = experiment.id;
-    users[i].experimentName = experiment.name;
-    users[i].isInExperiment = true;
+    user_list[i].experimentId = experiment.id;
+    user_list[i].experimentName = experiment.name;
+    user_list[i].isInExperiment = true;
     /////////////////////////////////////////////////////////////
     // The main hashing algorithm to generate buckets is here!!!!
     //////////////////////////////////////////////////////////////
     // Generate hash by concatenating userId with experimentId - using murmurV3 algorithm. (best choice)
-    const hashValue = murmur.murmur3(users[i].id, experiment.id);
+    const hashValue = murmur.murmur3(user_list[i].id, experiment.id);
     // Then get the ratio by dividing by the largest number
     const hashRatio = hashValue / Math.pow(2, 32);
     // Then use the ratio to divide up the buckets randomly
-    users[i].bucketId = parseInt(hashRatio * experiment.buckets, 10);
-    experiment.users.push(users[i]);
+    user_list[i].bucketId = parseInt(hashRatio * experiment.buckets, 10);
+    experiment.users.push(user_list[i]);
   }
 
   return { theExperiment: experiment, theUsers: users };
