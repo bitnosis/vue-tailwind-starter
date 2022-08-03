@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/vue-tailwind-starter/precache-manifest.427c61eef2287c9b7a87988810899250.js"
+  "/precache-manifest.0e5f61b07a2a985b9f8876073abb837d.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "vue-tailwind-starter"});
