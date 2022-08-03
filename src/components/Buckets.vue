@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'Hello',
+  name: 'Buckets',
   setup() {
     return {
       alt: 'Logo',

@@ -9,13 +9,20 @@
   },
   "scripts": {
     "serve": "vue-cli-service serve",
+    "nolint": "vue-cli-service serve --skip-plugins @vue/cli-plugin-eslint babel-eslint eslint eslint-plugin-vue",
     "build": "NODE_ENV=production vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "core-js": "^3.8.0",
+    "daisyui": "^1.25.4",
+    "dtoaster": "^0.1.4",
+    "murmurhash-js": "^1.0.0",
     "vue": "^2.6.12",
-    "vue-router": "^3.4.8"
+    "vue-faker": "^3.0.0",
+    "vue-router": "^3.4.8",
+    "vuex": "^3.6.2",
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.9",

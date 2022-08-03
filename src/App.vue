@@ -1,27 +1,18 @@
 <template>
-  <div id="app" class="text-gray-900 flex flex-col min-h-screen bg-gray-200">
-    <div class="flex-shrink-0 py-12 text-center">
-      <Hello></Hello>
-      <div class="mt-2">
-        <a href="https://github.com/james2doyle/vue-tailwind-starter" class="text-sm font-semibold text-gray-600 hover:underline" v-text="message"></a>
-      </div>
-    </div>
+  <div id="app" class="p-6 min-h-screen">
+    <Header />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Hello from 'Components/Hello.vue';
+import Header from 'Components/Header.vue';
 
 export default {
   name: 'App',
   components: {
-    Hello,
-  },
-  data() {
-    return {
-      message: 'Source on GitHub'
-    };
-  },
+    Header
+  }
 };
 </script>
 
