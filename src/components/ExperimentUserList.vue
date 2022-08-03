@@ -1,11 +1,17 @@
 <template>
   <div v-if="theUsers!=null">
-    <ScatterChart v-if="chartData.length>0" :data="chartData" />
-    <div class="overflow-x-auto relative">
-      <div class="w-full flex flex-row-reverse space-x-4 space-x-reverse mb-6">
-        <button type="submit" class="mt-6 text-white bg-red-700 rounded-md shadow-md hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center" @click="$emit('closeUsers')">CLOSE</button>
-        <button type="submit" class="mt-6 text-white bg-blue-700 rounded-md shadow-md hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center" @click="$emit('resetUsers')">RESET ONLY USERS IN THIS EXPERIMENT</button>
+    <div class="w-full flex flex-row-reverse space-x-4 space-x-reverse mb-6">
+      <button type="submit" class="mt-6 text-white bg-red-700 rounded-md shadow-md hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center" @click="$emit('closeUsers')">CLOSE</button>
+      <button type="submit" class="mt-6 text-white bg-blue-700 rounded-md shadow-md hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center" @click="$emit('resetUsers')">RESET ONLY USERS IN THIS EXPERIMENT</button>
+    </div>
+    <template v-if="chartData.length>0">
+      <div class="text-center text-xl">
+        <h3>Bucket Visualization</h3>
+        <ScatterChart :data="chartData" />
       </div>
+    </template>
+
+    <div class="overflow-x-auto relative">
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-900 uppercase bg-gray-300 ">
           <tr>
@@ -90,11 +96,8 @@ export default {
             data.data.push(d);
           }
         }
-
         chartData.push(data);
       }
-
-      console.log(chartData);
 
       return chartData;
     },

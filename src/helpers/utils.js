@@ -1,40 +1,6 @@
 /* eslint-disable no-useless-escape */
 const murmur = require("murmurhash-js");
 
-function sluggify(string) {
-  return string
-    .toString()
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w\-]+/g, "")
-    .replace(/\-\-+/g, "-")
-    .replace(/^-+/, "")
-    .replace(/-+$/, "");
-}
-
-function randomColor() {
-  return "#" + Math.floor(Math.random() * 16777215).toString(16);
-}
-
-function generateBucketIds(experiment, users) {
-  for (let i = 0; i < users.length; i++) {
-    users[i].experimentId = experiment.id;
-    users[i].experimentName = experiment.name;
-    users[i].isInExperiment = true;
-    // The main hashing algorithm to generate buckets is here!!....
-    // Generate hash by concatenating userId with experimentId
-    const hashValue = murmur.murmur3(users[i].id, experiment.id);
-    // Then get the ratio
-    const hashRatio = hashValue / Math.pow(2, 32);
-    // Then use the ratio to divide up the buckets
-    users[i].bucketId = parseInt(hashRatio * experiment.buckets, 10);
-    experiment.users.push(users[i]);
-  }
-
-  return { theExperiment: experiment, theUsers: users };
-}
-
 function makeFake(length) {
   let result = "";
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -78,6 +44,43 @@ function generateFakeUsers(userAmount) {
   }
 
   return users;
+}
+
+function sluggify(string) {
+  return string
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+}
+
+function randomColor() {
+  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+}
+
+// MAIN HASHING FUNCTION - This is the money right here lol  :)  //
+function generateBucketIds(experiment, users) {
+  for (let i = 0; i < users.length; i++) {
+    users[i].experimentId = experiment.id;
+    users[i].experimentName = experiment.name;
+    users[i].isInExperiment = true;
+    /////////////////////////////////////////////////////////////
+    // The main hashing algorithm to generate buckets is here!!!!
+    //////////////////////////////////////////////////////////////
+    // Generate hash by concatenating userId with experimentId - using murmurV3 algorithm. (best choice)
+    const hashValue = murmur.murmur3(users[i].id, experiment.id);
+    // Then get the ratio by dividing by the largest number
+    const hashRatio = hashValue / Math.pow(2, 32);
+    // Then use the ratio to divide up the buckets randomly
+    users[i].bucketId = parseInt(hashRatio * experiment.buckets, 10);
+    experiment.users.push(users[i]);
+  }
+
+  return { theExperiment: experiment, theUsers: users };
 }
 
 module.exports = {
