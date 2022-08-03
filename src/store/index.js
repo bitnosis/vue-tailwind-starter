@@ -1,11 +1,16 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
+import VuexPersistence from "vuex-persist";
 import { generateFakeUsers, generateUUID } from "../helpers/utils.js";
+
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage
+});
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  plugins: [vuexLocal.plugin],
   state: {
     page: "experiments",
     users: generateFakeUsers(1500),
