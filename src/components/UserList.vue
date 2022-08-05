@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { getUserExperimentList, getBucketStatus } from '../helpers/bucketFunctions.js';
+import { getUserExperimentList } from '../helpers/bucketFunctions.js';
 
 export default {
   name: 'UserList',

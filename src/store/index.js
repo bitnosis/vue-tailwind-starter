@@ -25,9 +25,11 @@ export default new Vuex.Store({
     page: "experiments",
     users: generateFakeUsers(1000),
     buckets: generateBuckets(NUMBER_OF_STATIC_BUCKETS),
-    experiments: [newExperiment]
+    experiments: [newExperiment],
+    logs: []
   },
   getters: {
+    getLogs: state => state.logs,
     getBuckets: state => state.buckets,
     getPage: state => state.page,
     getUsers: state => state.users,
@@ -36,6 +38,9 @@ export default new Vuex.Store({
   mutations: {
     SET_PAGE(state, page) {
       state.page = page;
+    },
+    NEW_LOG(state, log) {
+      state.logs.push(log);
     },
     SAVE_EXPERIMENT(state, experiment) {
       if (experiment.id === null) {

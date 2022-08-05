@@ -32,11 +32,6 @@ function averageUsersPerBucket(userCount) {
   return userCount / NUMBER_OF_STATIC_BUCKETS;
 }
 
-function returnAvailableBucketBlock(experiment, experiments) {
-  for (const exp of experiments) {
-  }
-}
-
 // This just return the count of the users that will be affected by this experiment
 // userCount = count of users in experiment
 // bucketCount = count of buckets returned by experiment
@@ -88,9 +83,10 @@ function isUserInExperiment(experiment, bucketId, user) {
     if (g != null) {
       const data = {
         name: experiment.name,
-        variant: g,
+        variant: g.name,
+        variantIndex: g.index,
         mixPanelData: {
-          token: experiment.mixpanelExperimentToken,
+          token: experiment.mixPanelExperimentToken,
           event: g.mixPanelEvent
         }
       };
@@ -106,9 +102,13 @@ function isUserInExperiment(experiment, bucketId, user) {
 // This function just returns which variant group a particular bucketNumber is in
 function getUserVariantGroup(groups, bucketId) {
   if (groups !== null) {
-    for (const group of groups) {
-      if (bucketId < group.bucketRange.end) {
-        return group.name;
+    for (let i = 0; i < groups.length; i++) {
+      if (bucketId < groups[i].bucketRange.end) {
+        return {
+          name: groups[i].name,
+          index: i,
+          mixPanelEvent: groups[i].mixPanelEvent
+        };
       }
     }
   }

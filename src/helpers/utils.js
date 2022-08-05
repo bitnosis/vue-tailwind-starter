@@ -106,10 +106,7 @@ function generateFakeUsers(userAmount) {
       usage: randomFromArray(usage),
       revenue: Math.floor(Math.random() * 600000),
       patient_count: Math.floor(Math.random() * 100),
-      bucketId,
-      isInExperiment: false,
-      experimentName: null,
-      experimentId: null
+      bucketId
     };
     users.push(user);
   }
