@@ -7,8 +7,8 @@
       <div v-else>
         <h3 class="text-xl mb-3 font-bold">User List</h3>
       </div>
-      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-900 uppercase bg-gray-300 ">
+      <table class="w-full text-sm text-left text-gray-500">
+        <thead class="text-xs text-gray-900 uppercase bg-gray-300 border ">
           <tr>
             <th :class="{hidden: !viewDetails}" scope="col" class="py-3  px-4">
               User ID
@@ -38,7 +38,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+          <tr v-for="user in users" :key="user.id" class="bg-white border">
             <th :class="{hidden: !viewDetails}" scope="row" class="py-1 px-4 text-xs text-gray-900 whitespace-nowrap dark:text-white">
               {{ user.id }}
             </th>

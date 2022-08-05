@@ -8,7 +8,10 @@
       <div id="navbar-default" class="hidden w-full md:block md:w-auto">
         <ul class="flex flex-col p-4 mt-4 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0">
           <li>
-            <a href="#/users" :class="navButtonClass('users')" @click="setPage('users')">User List</a>
+            <a href="#/simulate" :class="navButtonClass('simulate')" @click="setPage('simulate')">Simulate</a>
+          </li>
+          <li>
+            <a href="#/logging" :class="navButtonClass('logging')" @click="setPage('logging')">Logging</a>
           </li>
           <li>
             <a href="#/experiments" :class="navButtonClass('experiments')" @click="setPage('experiments')">Experiments</a>

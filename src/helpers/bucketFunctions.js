@@ -56,7 +56,7 @@ function getExperimentPopulationData(experiment, totalUserCount) {
 
   return {
     userCount: usersInExperiment,
-    bucketCount: buckets,
+    bucketCount: parseInt(buckets),
     bucketBlock
   };
 }

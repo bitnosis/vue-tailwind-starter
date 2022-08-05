@@ -82,6 +82,7 @@
 
 <script>
 import { newVariant } from '../helpers/data.js';
+
 import {
   sluggify,
   generateUUID

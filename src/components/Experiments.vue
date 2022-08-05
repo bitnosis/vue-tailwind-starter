@@ -37,28 +37,28 @@
         <button type="submit" class="mt-6 text-white bg-blue-700 rounded-sm shadow-md hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold text-sm px-4 py-1.5 text-center " @click="addNewExperiment()">Create New Experiment</button>
       </div>
 
-      <table class="w-full text-sm text-left text-gray-900 ">
-        <thead class="text-xs text-gray-900 uppercase bg-gray-300">
+      <table class="w-full text-sm text-left text-gray-500">
+        <thead class="text-xs text-gray-900 uppercase bg-gray-300 border">
           <tr>
-            <th scope="col" class="py-2 px-4">
+            <th scope="col" class="py-3 px-4">
               Experiment Name
             </th>
-            <th scope="col" class="py-2 px-4">
+            <th scope="col" class="py-3 px-4">
               Treatment Groups
             </th>
-            <th scope="col" class="py-2 px-4">
+            <th scope="col" class="py-3 px-4">
               Population Allocation
             </th>
-            <th scope="col" class="py-2 px-4">
+            <th scope="col" class="py-3 px-4">
               Status
             </th>
-            <th scope="col" class="text-right py-2 px-4">
+            <th scope="col" class="text-right py-3 px-4">
               Actions
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="exp in experiments" :key="exp.id" class="bg-white border-b0">
+          <tr v-for="exp in experiments" :key="exp.id" class="bg-white border-b border">
             <th scope="row" class="py-1 px-3 font-medium text-gray-900 whitespace-nowrap ">
               {{ exp.name }}
             </th>
@@ -70,9 +70,9 @@
               </template>
             </td>
             <td class="py-1 px-3">
-              {{ exp.populationAllocation }} %
+              {{ exp.populationAllocation }}%
               <span v-if="exp.status!=='inactive'">
-                {{ getPopulationData(exp).userCount }} Users in {{ getPopulationData(exp).bucketCount }} Buckets<br />
+                <b>{{ getPopulationData(exp).userCount }}</b> Users in <b>{{ getPopulationData(exp).bucketCount }}</b> Buckets<br />
               </span>
             </td>
             <td class="py-1 px-3">
@@ -93,15 +93,14 @@
 <script>
 import ExperimentForm from '../components/ExperimentForm';
 import ExperimentUserList from '../components/ExperimentUserList';
-import Loader from '../components/Loader';
+
 import { newExperiment } from '../helpers/data.js';
-import { generateBucketIds, generateUUID } from '../helpers/utils.js';
 import { getExperimentPopulationData } from '../helpers/bucketFunctions.js';
 
 
 export default {
   name: 'Experiments',
-  components: { ExperimentForm, ExperimentUserList, Loader },
+  components: { ExperimentForm, ExperimentUserList },
   data() {
     return {
       showModal:false,
@@ -136,6 +135,7 @@ export default {
       this.loadedExperiment = null;
     },
     addNewExperiment() {
+      newExperiment.id = null;
       this.loadedExperiment = newExperiment;
     },
     editExperiment(experiment) {
