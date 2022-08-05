@@ -1,7 +1,17 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import VuexPersistence from "vuex-persist";
-import { generateFakeUsers, generateUUID } from "../helpers/utils.js";
+import {
+  generateBuckets,
+  generateFakeUsers,
+  generateUUID
+} from "../helpers/utils.js";
+import { newExperiment } from "../helpers/data.js";
+import { NUMBER_OF_STATIC_BUCKETS } from "../helpers/bucketFunctions.js";
+
+newExperiment.id = generateUUID();
+newExperiment.variantGroups[0].id = generateUUID();
+newExperiment.variantGroups[1].id = generateUUID();
 
 const vuexLocal = new VuexPersistence({
   storage: window.localStorage
@@ -13,33 +23,12 @@ export default new Vuex.Store({
   plugins: [vuexLocal.plugin],
   state: {
     page: "experiments",
-    users: generateFakeUsers(1500),
-    experiments: [
-      {
-        id: generateUUID(),
-        name: "First Example Experiment",
-        treatmentGroups: [
-          {
-            id: generateUUID(),
-            name: "Control A - Shown the tour",
-            rangeEnd: 20,
-            rules: []
-          },
-          {
-            id: generateUUID(),
-            rangeEnd: 40,
-            name: "Control B - Not Shown Tour",
-            rules: []
-          }
-        ],
-        buckets: 40,
-        populationPercent: 100,
-        users: [],
-        flipperName: "first-example-experiment"
-      }
-    ]
+    users: generateFakeUsers(1000),
+    buckets: generateBuckets(NUMBER_OF_STATIC_BUCKETS),
+    experiments: [newExperiment]
   },
   getters: {
+    getBuckets: state => state.buckets,
     getPage: state => state.page,
     getUsers: state => state.users,
     getExperiments: state => state.experiments
@@ -56,6 +45,9 @@ export default new Vuex.Store({
         const index = state.experiments.indexOf(experiment);
         state.experiments[index] = experiment;
       }
+    },
+    SET_BUCKETS(state, buckets) {
+      state.buckets = buckets;
     },
     SET_USERS(state, users) {
       state.users = users;

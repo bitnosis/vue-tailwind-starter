@@ -3,10 +3,16 @@ import VueRouter from "vue-router";
 import Experiments from "../components/Experiments.vue";
 import Buckets from "../components/Buckets.vue";
 import UserList from "../components/UserList.vue";
+import Home from "../components/Home.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    path: "/",
+    name: "Home",
+    component: Home
+  },
   {
     path: "/users",
     name: "Users",

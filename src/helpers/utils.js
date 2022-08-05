@@ -1,6 +1,28 @@
 /* eslint-disable no-useless-escape */
 const murmur = require("murmurhash-js");
 
+// This generates a Bucket # for a user.
+// This is for a static bucketing system
+////////////////////////////////////////
+// In this example there are...
+// 500 Static buckets
+// 5000 Demo users
+// = 10 users in a bucket
+// -------
+// We can run this once, and record the bucketNumber onto the user table, just once.
+function getUserBucket(userId) {
+  const bucketSeed = "The Bucketing Seed";
+  const numberOfBucketsInSystem = 500;
+  // Generate hash for user with the bucketSeed
+  const hashValue = murmur.murmur3(userId, bucketSeed);
+  // Then get the ratio by dividing by the largest number
+  const hashRatio = hashValue / Math.pow(2, 32);
+
+  // Then use the ratio to divide up the buckets randomly
+  // RETURN THE BUCKET NUMBER FOR THIS USER
+  return parseInt(hashRatio * numberOfBucketsInSystem, 10);
+}
+
 const modalities = [
   { name: "Medical doctor", prob: 0.1 },
   { name: "Naturopathic doctor", prob: 0.3 },
@@ -75,14 +97,16 @@ function generateFakeUsers(userAmount) {
   const users = [];
 
   for (let i = 0; i < userAmount; i++) {
+    const userId = generateUUID();
+    const bucketId = getUserBucket(userId);
     const user = {
-      id: generateUUID(),
+      id: userId,
       name: makeFake(6),
       modality: weighted_random(modalities),
       usage: randomFromArray(usage),
       revenue: Math.floor(Math.random() * 600000),
       patient_count: Math.floor(Math.random() * 100),
-      bucketId: null,
+      bucketId,
       isInExperiment: false,
       experimentName: null,
       experimentId: null
@@ -91,6 +115,22 @@ function generateFakeUsers(userAmount) {
   }
 
   return users;
+}
+
+function generateBuckets(bucketCount) {
+  const buckets = [];
+  for (let i = 0; i < bucketCount; i++) {
+    const bucketIndex = i + 1;
+    const data = {
+      bucketNumber: bucketIndex,
+      isInExperiment: false,
+      isInExclusiveExperiment: false
+    };
+
+    buckets.push(data);
+  }
+
+  return buckets;
 }
 
 function sluggify(string) {
@@ -173,5 +213,7 @@ module.exports = {
   makeFake,
   generateBucketIds,
   generateUUID,
-  randomColor
+  randomColor,
+  getUserBucket,
+  generateBuckets
 };

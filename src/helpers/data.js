@@ -1,14 +1,46 @@
+const newVariant = {
+  id: null,
+  name: "Control A",
+  description: "We show the user the default display, when in this group",
+  populationAllocation: 50,
+  bucketRange: { start: 0, end: 20 },
+  buckets: [],
+  mixPanelEvent: "some-event-to-fire-on-mixpanel",
+  rules: []
+};
+
 const newExperiment = {
   id: null,
   name: "New Experiment",
-  buckets: 40,
-  populationPercent: 100,
-  users: [],
-  treatmentGroups: [
-    { id: null, name: "Control A", rangeEnd: 20, rules: [] },
-    { id: null, name: "Control B", rangeEnd: 40, rules: [] }
-  ],
-  flipperName: "new-experiment"
+  hypothesis:
+    "This is where you put the hypothesis for this particular experiment",
+  populationAllocation: 10,
+  status: "inactive",
+  isExclusive: false,
+  mixPanelExperimentToken: "some-mixpanel-project-token",
+  variantGroups: [
+    {
+      id: null,
+      name: "Control A",
+      description: "We show the user the default display, when in this group",
+      populationAllocation: 50,
+      bucketRange: { start: 0, end: 20 },
+      buckets: [],
+      mixPanelEvent: "some-event-to-fire-on-mixpanel",
+      rules: []
+    },
+    {
+      id: null,
+      name: "Control B",
+      description:
+        "We show the user X display, when in this group, we tracking such and such",
+      populationAllocation: 50,
+      bucketRange: { start: 21, end: 40 },
+      buckets: [],
+      mixPanelEvent: "some-event-to-fire-on-mixpanel",
+      rules: []
+    }
+  ]
 };
 
 const modalities = [
@@ -48,6 +80,7 @@ const patients = [
 
 module.exports = {
   newExperiment,
+  newVariant,
   modalities,
   usage,
   revenue,
