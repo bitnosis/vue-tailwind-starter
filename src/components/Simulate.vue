@@ -104,6 +104,9 @@ export default {
     users() {
       return this.$store.getters.getUsers;
     },
+    logs() {
+      return this.$store.getters.getLogs;
+    },
     experiments() {
       return this.$store.getters.getExperiments;
     }
@@ -127,12 +130,26 @@ export default {
       this.impersonator.experiment = this.experiment;
 
       if (this.experiment) {
-        // Log the impression for experiment user is in it
-        this.$store.commit('NEW_LOG', {
+        const data = {
           experiment: this.experiment,
           user: this.impersonator,
-          device: 'DEVICE HERE'
-        });
+          impressions:1,
+          device: this.impersonator.device
+        };
+
+        // Log the impression for experiment user is in it
+        let l = null;
+        for (const log of this.logs) {
+          if (log.user.id===data.user.id && log.experiment.name===data.experiment.name) {
+            log.impressions++;
+            l= log;
+          }
+        }
+        if (l==null) {
+          this.$store.commit('NEW_LOG', data);
+        } else {
+          this.$store.commit('SET_LOGS', this.logs);
+        }
       }
     },
     deviceType() {

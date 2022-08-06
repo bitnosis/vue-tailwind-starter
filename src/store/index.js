@@ -39,6 +39,9 @@ export default new Vuex.Store({
     SET_PAGE(state, page) {
       state.page = page;
     },
+    SET_LOGS(state, logs) {
+      state.logs = logs;
+    },
     NEW_LOG(state, log) {
       state.logs.push(log);
     },

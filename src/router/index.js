@@ -5,6 +5,7 @@ import Buckets from "../components/Buckets.vue";
 import UserList from "../components/UserList.vue";
 import Home from "../components/Home.vue";
 import Simulate from "../components/Simulate.vue";
+import Logging from "../components/Logging.vue";
 
 Vue.use(VueRouter);
 
@@ -13,6 +14,11 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home
+  },
+  {
+    path: "/logging",
+    name: "Logging",
+    component: Logging
   },
   {
     path: "/simulate",

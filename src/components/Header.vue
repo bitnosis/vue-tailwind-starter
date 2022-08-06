@@ -11,10 +11,14 @@
             <a href="#/simulate" :class="navButtonClass('simulate')" @click="setPage('simulate')">Simulate</a>
           </li>
           <li>
-            <a href="#/logging" :class="navButtonClass('logging')" @click="setPage('logging')">Logging</a>
+            <a href="#/logging" :class="navButtonClass('logging')" @click="setPage('logging')">Logging
+              <span v-if="logs.length>0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-yellow-500 text-white rounded-full">{{ logs.length }}</span>
+            </a>
           </li>
           <li>
-            <a href="#/" :class="navButtonClass('')" @click="setPage('')">Experiments</a>
+            <a href="#/" :class="navButtonClass('')" @click="setPage('')">Experiments
+              <span v-if="experiments.length>0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-blue-500 text-white rounded-full">{{ experiments.length }}</span>
+            </a>
           </li>
         </ul>
       </div>
@@ -25,6 +29,12 @@
 export default {
   name: 'Header',
   computed: {
+    logs() {
+      return this.$store.getters.getLogs;
+    },
+    experiments() {
+      return this.$store.getters.getExperiments;
+    },
     page() {
       return this.$store.getters.getPage;
     }
