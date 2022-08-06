@@ -32,7 +32,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="log in logs" :key="log" class="bg-white border">
+          <tr v-for="log in logs" :key="log.user.id" class="bg-white border">
             <th scope="row" class="py-1 px-4 text-xs text-gray-900 whitespace-nowrap dark:text-white">
               {{ log.user.id }}
             </th>
@@ -66,9 +66,6 @@ export default {
     logs() {
       return this.$store.getters.getLogs;
     }
-  },
-  mounted() {
-    console.log(this.logs);
   },
   methods:{
     clearLogs() {
