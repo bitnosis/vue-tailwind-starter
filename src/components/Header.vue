@@ -16,6 +16,10 @@
             </a>
           </li>
           <li>
+            <a href="#/buckets" :class="navButtonClass('buckets')" @click="setPage('buckets')">Buckets
+            </a>
+          </li>
+          <li>
             <a href="#/" :class="navButtonClass('')" @click="setPage('')">Experiments
               <span v-if="experiments.length>0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-blue-500 text-white rounded-full">{{ experiments.length }}</span>
             </a>

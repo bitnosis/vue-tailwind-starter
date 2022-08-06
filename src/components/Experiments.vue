@@ -64,8 +64,8 @@
             </th>
             <td class="py-1 px-3">
               <template v-if="exp.variantGroups.length>0">
-                <div v-for="(vg, i) in exp.variantGroups" :key="vg.id" class="mb-1 text-xs text-gray-900">
-                  "{{ vg.name }}"  -  {{ vg.populationAllocation }}%
+                <div v-for="(vg) in exp.variantGroups" :key="vg.id" class="mb-1 text-xs text-gray-900">
+                  {{ vg.name }}  | {{ vg.populationAllocation }}%
                 </div>
               </template>
             </td>
