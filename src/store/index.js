@@ -45,6 +45,10 @@ export default new Vuex.Store({
     NEW_LOG(state, log) {
       state.logs.push(log);
     },
+    DELETE_EXPERIMENT(state, experiment) {
+      const index = state.experiments.indexOf(experiment);
+      state.experiments.splice(index, 1);
+    },
     SAVE_EXPERIMENT(state, experiment) {
       if (experiment.id === null) {
         experiment.id = generateUUID();

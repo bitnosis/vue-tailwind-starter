@@ -25,7 +25,7 @@
           <td class="py-1 px-4">
             {{ bucket.isInExperiment }}
           </td>
-          <td v-if="userExperiments(bucket.bucketNumber).length>0" class="text-xs py-1 px-4">
+          <td v-if="userExperiments(bucket.bucketNumber).length>0 && bucket.isInExperiment" class="text-xs py-1 px-4">
             <div v-for="exp in userExperiments(bucket.bucketNumber)" :key="exp.name">
               <b>Experiment :</b> {{ exp.name }}
               <br />

@@ -32,21 +32,27 @@
           <template v-if="loadedExperiment.variantGroups.length>0">
             <div v-for="vg in loadedExperiment.variantGroups" :key="vg.id" class="flex justify-end bg-gray-300 mb-2 rounded-md p-4 ">
               <div class="w-full flex gap-4 mb-2">
-                <div class="w-1/4">
+                <div class="w-1/6">
                   <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300">Name</label>
                   <input v-model="vg.name" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " required>
                 </div>
-                <div class="w-2/4">
+                <div class="w-1/6">
+                  <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300">Allocation %</label>
+                  <input v-model="vg.populationAllocation" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " required @change="reCalculate()">
+                  <span class="text-xs">Buckets [ {{ vg.bucketRange.start }} - {{ vg.bucketRange.end }} ]
+                  </span>
+                </div>
+                <div class="w-1/3">
                   <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300">Hypothesis</label>
                   <input v-model="vg.description" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " required>
                 </div>
-                <div class="w-1/4">
-                  <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300">Allocation %</label>
-                  <input v-model="vg.populationAllocation" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " required @change="reCalculate()">
+                <div class="w-1/3">
+                  <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300">Mixpanel Event</label>
+                  <input v-model="vg.mixPanelEvent" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " required>
                 </div>
               </div>
               <div class="">
-                <button type="submit" class="text-white mt-8 ml-4 shadow-lg bg-red-900 hover:bg-red-700 focus:ring-3 focus:outline-none focus:ring-red-300 font-bold rounded-sm text-sm px-4 py-1.5 text-center " @click="removeVariant(vg)">Delete</button>
+                <button type="submit" class="text-white mt-8 ml-4 shadow-lg bg-red-900 hover:bg-red-700 focus:ring-3 focus:outline-none focus:ring-red-300 font-bold rounded-sm text-sm px-4 py-1.5 text-center " @click="removeVariant(vg)">x</button>
               </div>
               <!--<div class="w-full flex gap-4 ">
                 <div class="w-1/2">
@@ -160,22 +166,24 @@ export default {
         return;
       }
 
-      this.loadedExperiment = this.emptyBuckets(this.loadedExperiment);
+      if (this.loadedExperiment.id!=null) {
+        this.loadedExperiment = this.emptyBuckets(this.loadedExperiment);
 
-      // Get only available buckets
-      const buckets = this.buckets.filter(function(bucket) {
-        return bucket.isInExperiment === false;
-      });
+        // Get only available buckets
+        const buckets = this.buckets.filter(function(bucket) {
+          return bucket.isInExperiment === false;
+        });
 
-      if (this.loadedExperiment.status==='running' || this.loadedExperiment.status==='paused') {
-        for (const vg of this.loadedExperiment.variantGroups) {
-          let count = 0;
-          for (const bucket of buckets) {
-            if (count>=vg.bucketRange.start && count<=vg.bucketRange.end) {
-              vg.buckets.push(bucket.bucketNumber);
-              bucket.isInExperiment = true;
+        if (this.loadedExperiment.status==='running' || this.loadedExperiment.status==='paused') {
+          for (const vg of this.loadedExperiment.variantGroups) {
+            let count = 0;
+            for (const bucket of buckets) {
+              if (count>=vg.bucketRange.start && count<=vg.bucketRange.end) {
+                vg.buckets.push(bucket.bucketNumber);
+                bucket.isInExperiment = true;
+              }
+              count++;
             }
-            count++;
           }
         }
       }

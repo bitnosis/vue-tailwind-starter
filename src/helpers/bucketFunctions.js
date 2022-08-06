@@ -103,7 +103,7 @@ function isUserInExperiment(experiment, bucketId, user) {
 function getUserVariantGroup(groups, bucketId) {
   if (groups !== null) {
     for (let i = 0; i < groups.length; i++) {
-      if (bucketId < groups[i].bucketRange.end) {
+      if (groups[i].buckets.includes(bucketId)) {
         return {
           name: groups[i].name,
           index: i,

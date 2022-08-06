@@ -59,7 +59,7 @@
         </thead>
         <tbody>
           <tr v-for="exp in experiments" :key="exp.id" class="bg-white border-b border">
-            <th scope="row" class="py-1 px-3 font-medium text-gray-900 whitespace-nowrap ">
+            <th scope="row" class="text-gray-900 py-1 px-3">
               {{ exp.name }}
             </th>
             <td class="py-1 px-3">
@@ -81,6 +81,7 @@
             <td class="py-2 px-3">
               <div class="flex flex-row-reverse space-x-4 space-x-reverse">
                 <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-sm text-xs px-4 py-1.5 text-center d" @click="editExperiment(exp)">EDIT</button>
+                <button type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 font-medium rounded-sm text-xs px-4 py-1.5 text-center d" @click="deleteExperiment(exp)">Delete</button>
               </div>
             </td>
           </tr>
@@ -103,7 +104,6 @@ export default {
   components: { ExperimentForm, ExperimentUserList },
   data() {
     return {
-      showModal:false,
       loadedExperiment:null,
       viewExperiment:null,
       viewingUserList: [],
@@ -135,11 +135,24 @@ export default {
       this.loadedExperiment = null;
     },
     addNewExperiment() {
-      newExperiment.id = null;
-      this.loadedExperiment = newExperiment;
+      const n = Object.assign({}, newExperiment);
+      n.id = null;
+      this.loadedExperiment = n;
+    },
+    deleteExperiment(experiment) {
+      for (const vg of experiment.variantGroups) {
+        for (const bucketId of vg.buckets) {
+          for (const b of this.buckets) {
+            if (b.bucketNumber === bucketId && b.isInExperiment) {
+              b.isInExperiment = false;
+            }
+          }
+          vg.buckets = [];
+        }
+      }
+      this.$store.commit('DELETE_EXPERIMENT', experiment);
     },
     editExperiment(experiment) {
-      this.showModal = true;
       this.loadedExperiment = experiment;
     },
     viewUserList(experiment) {
