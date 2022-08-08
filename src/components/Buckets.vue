@@ -89,19 +89,19 @@ export default {
   mounted() {
     this.bucketSeedInfo = this.bucketInfo;
     this.bucketData = this.getBucketData();
-    this.getUserCount();
+    this.getUserCounts();
   },
   methods:{
     getUserCounts() {
       let count = 0;
       for (let i=0;i<=this.buckets.length-1;i++) {
+        count = 0;
         for (let k =0;k<=this.users.length-1;k++) {
           if (this.users[k].bucketId === this.buckets[i].bucketNumber) {
             count++;
           }
         }
         this.buckets[i].userCount = count;
-        count = 0;
       }
     },
     getBucketData() {
