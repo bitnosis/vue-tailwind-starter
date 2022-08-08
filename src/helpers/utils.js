@@ -10,9 +10,13 @@ const murmur = require("murmurhash-js");
 // = 10 users in a bucket
 // -------
 // We can run this once, and record the bucketNumber onto the user table, just once.
-function getUserBucket(userId) {
-  const bucketSeed = "The Bucketing Seed";
-  const numberOfBucketsInSystem = 500;
+function getUserBucket(userId, bucketSeed = null, staticBuckets = null) {
+  if (bucketSeed == null) {
+    bucketSeed = "The Bucketing Seed";
+  }
+  if (staticBuckets == null) {
+    staticBuckets = 500;
+  }
   // Generate hash for user with the bucketSeed
   const hashValue = murmur.murmur3(userId, bucketSeed);
   // Then get the ratio by dividing by the largest number
@@ -20,7 +24,7 @@ function getUserBucket(userId) {
 
   // Then use the ratio to divide up the buckets randomly
   // RETURN THE BUCKET NUMBER FOR THIS USER
-  return parseInt(hashRatio * numberOfBucketsInSystem, 10);
+  return parseInt(hashRatio * staticBuckets, 10);
 }
 
 const modalities = [
@@ -93,12 +97,12 @@ function generateUUID() {
   return result;
 }
 
-function generateFakeUsers(userAmount) {
+function generateFakeUsers(userAmount, bucketSeed, staticBuckets) {
   const users = [];
 
   for (let i = 0; i < userAmount; i++) {
     const userId = generateUUID();
-    const bucketId = getUserBucket(userId);
+    const bucketId = getUserBucket(userId, bucketSeed, staticBuckets);
     const user = {
       id: userId,
       name: makeFake(6),

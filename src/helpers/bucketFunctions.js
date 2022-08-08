@@ -1,7 +1,8 @@
 /* eslint-disable no-useless-escape */
 const murmur = require("murmurhash-js");
-const NUMBER_OF_STATIC_BUCKETS = 333;
+const NUMBER_OF_STATIC_BUCKETS = 350;
 const BUCKET_SEED = "One Time Bucket Seed";
+const USER_COUNT = 1000;
 
 // getUserBucket(userId) generates a Bucket # for a user.
 // This is for the static bucketing system
@@ -13,16 +14,19 @@ const BUCKET_SEED = "One Time Bucket Seed";
 // -------
 // We can run this once, and record the bucketNumber onto the user table, just once.
 // Or the algorithm can run per request,
-function getUserBucket(userId) {
+function getUserBucket(userId, bucketSeed = null, staticBuckets = null) {
+  if (bucketSeed == null) {
+    bucketSeed = BUCKET_SEED;
+  }
+  if (staticBuckets == null) {
+    staticBuckets = NUMBER_OF_STATIC_BUCKETS;
+  }
   // Generate hash for user with the bucketSeed
-  const hashValue = murmur.murmur3(userId, BUCKET_SEED);
+  const hashValue = murmur.murmur3(userId, bucketSeed);
   // Then get the ratio by dividing by the largest number
   const hashRatio = hashValue / Math.pow(2, 32);
   // Then use the ratio to divide up the buckets randomly
-  const bucketNumberForUser = parseInt(
-    hashRatio * NUMBER_OF_STATIC_BUCKETS,
-    10
-  );
+  const bucketNumberForUser = parseInt(hashRatio * staticBuckets, 10);
 
   // RETURN THE BUCKET NUMBER FOR THIS USER
   return bucketNumberForUser;
@@ -45,8 +49,12 @@ function recalculateVariantAllocation(experiment, totalUsers) {
   return experiment;
 }
 
-function averageUsersPerBucket(userCount) {
-  return userCount / NUMBER_OF_STATIC_BUCKETS;
+function averageUsersPerBucket(userCount, bucketCount) {
+  if (bucketCount == null) {
+    bucketCount = NUMBER_OF_STATIC_BUCKETS;
+  }
+
+  return userCount / bucketCount;
 }
 
 // This just return the count of the users that will be affected by this experiment
@@ -190,6 +198,8 @@ function getBucketStatus(buckets, bucketId) {
 
 module.exports = {
   NUMBER_OF_STATIC_BUCKETS,
+  BUCKET_SEED,
+  USER_COUNT,
   getUserBucket,
   getUserVariantGroup,
   getUserExperimentList,
