@@ -10,6 +10,9 @@
             Bucket Number
           </th>
           <th scope="col" class="py-3  px-4">
+            Users In Bucket
+          </th>
+          <th scope="col" class="py-3  px-4">
             Is In Experiment
           </th>
           <th scope="col" class="py-3  px-4">
@@ -21,6 +24,9 @@
         <tr v-for="(bucket) in buckets" :key="bucket.bucketNumber" class="bg-white border">
           <td class="py-1 px-4">
             {{ bucket.bucketNumber }}
+          </td>
+          <td class="py-1 px-4">
+            {{ bucket.userCount }}
           </td>
           <td class="py-1 px-4">
             {{ bucket.isInExperiment }}
@@ -55,7 +61,22 @@ export default {
       return this.$store.getters.getUsers;
     },
   },
+  mounted() {
+    this.getUserCounts();
+  },
   methods: {
+    getUserCounts() {
+      let count = 0;
+      for (let i=0;i<=this.buckets.length-1;i++) {
+        count = 0;
+        for (let k =0;k<=this.users.length-1;k++) {
+          if (this.users[k].bucketId === this.buckets[i].bucketNumber) {
+            count++;
+          }
+        }
+        this.buckets[i].userCount = count;
+      }
+    },
     userExperiments(bucketId) {
       return getUserExperimentList(this.experiments, bucketId);
     },
