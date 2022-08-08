@@ -93,14 +93,15 @@ export default {
   },
   methods:{
     getUserCounts() {
-      for (let i=0;i<this.buckets.length;i++) {
-        let count = 0;
-        for (let k =0;k<this.users.length;k++) {
+      let count = 0;
+      for (let i=0;i<=this.buckets.length-1;i++) {
+        for (let k =0;k<=this.users.length-1;k++) {
           if (this.users[k].bucketId === this.buckets[i].bucketNumber) {
             count++;
           }
         }
         this.buckets[i].userCount = count;
+        count = 0;
       }
     },
     getBucketData() {
