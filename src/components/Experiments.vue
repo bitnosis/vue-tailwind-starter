@@ -102,7 +102,17 @@
               </span>
             </td>
             <td class="py-1 px-3">
-              {{ exp.status.toUpperCase() }}
+              <div class="inline flex">
+                <div v-if="exp.status=='running'" class="bg-green-500 border-2 border-green-900 h-3 w-3 mt-1 mr-2 rounded-full  ">
+                </div>
+                <div v-else class="bg-red-300  h-3 w-3 mt-1 mr-2 rounded-full "></div>
+                <div v-if="exp.status=='running'" class="text-green-400">
+                  {{ exp.status.toUpperCase() }}
+                </div>
+                <div v-else class="text-gray-400">
+                  {{ exp.status.toUpperCase() }}
+                </div>
+              </div>
             </td>
             <td class="py-2 px-3">
               <div class="flex flex-row-reverse space-x-4 space-x-reverse">
