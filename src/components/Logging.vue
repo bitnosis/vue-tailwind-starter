@@ -46,10 +46,10 @@
               {{ log.impressions }}
             </td>
             <td class="py-1 px-4">
-              <span class="inline-flex text-xs">
+              <span class="inline text-xs">
                 <!--<span v-if="isInExperiment(user.bucketId)" class="inline-flex items-center justify-center px-1 py-1 mr-2 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">EX</span>
                 <span v-if="isInExclusive(user.bucketId)" class="inline-flex items-center justify-center px-1 py-1 mr-2 text-xs font-bold leading-none text-red-100 bg-yellow-500 rounded-full">Y</span>-->
-                Project Token : <b>{{ log.experiment.mixPanelData.token }}</b>
+                Project Token : <b>{{ log.experiment.mixPanelData.token }}</b><br />
                 Mixpanel Event : <b>{{ log.experiment.mixPanelData.event }}</b>
               </span>
             </td>

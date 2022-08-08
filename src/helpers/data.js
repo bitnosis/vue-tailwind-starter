@@ -15,6 +15,8 @@ const newExperiment = {
   hypothesis:
     "This is where you put the hypothesis for this particular experiment",
   populationAllocation: 10,
+  startDate: new Date(),
+  endDate: new Date(),
   status: "inactive",
   isExclusive: false,
   mixPanelExperimentToken: "some-mixpanel-project-token",

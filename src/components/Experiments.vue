@@ -33,8 +33,34 @@
 
     <div v-if="!viewingList" class="overflow-x-auto relative">
       <div class="w-full flex  mb-6">
-        <button type="submit" class="mt-6 mr-4 text-white bg-red-700 rounded-sm shadow-md hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-bold text-sm px-4 py-1.5 text-center " @click="resetAll()">RESET ALL</button>
-        <button type="submit" class="mt-6 text-white bg-blue-700 rounded-sm shadow-md hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold text-sm px-4 py-1.5 text-center " @click="addNewExperiment()">Create New Experiment</button>
+        <button
+          type="submit"
+          class="mt-6 mr-4 text-white bg-red-700 rounded-sm shadow-md hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-bold text-sm px-4 py-1.5 text-center "
+          @click="resetAll()"
+        >
+          <svg
+            class="h-5 w-5 inline text-white"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" />
+            <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -5v5h5" />
+            <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 5v-5h-5" /></svg>
+          RESET ALL
+        </button>
+        <button
+          type="submit"
+          class="mt-6 float-right text-black bg-yellow-500 rounded-sm shadow-md hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-200 font-bold text-sm px-4 py-1.5 text-center "
+          @click="addNewExperiment()"
+        >
+          Create New Experiment
+        </button>
       </div>
 
       <table class="w-full text-sm text-left text-gray-500">
@@ -80,8 +106,51 @@
             </td>
             <td class="py-2 px-3">
               <div class="flex flex-row-reverse space-x-4 space-x-reverse">
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-sm text-xs px-4 py-1.5 text-center d" @click="editExperiment(exp)">EDIT</button>
-                <button type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 font-medium rounded-sm text-xs px-4 py-1.5 text-center d" @click="deleteExperiment(exp)">Delete</button>
+                <button
+                  type="submit"
+                  class="inline text-white bg-green-700 hover:bg-green-800 focus:ring-2 focus:outline-none focus:ring-green-300 font-medium rounded-sm text-xs px-3 py-1.5 text-center d"
+                  @click="editExperiment(exp)"
+                >
+                  <svg
+                    class="inline h-5 w-5 text-white"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" />
+                    <path
+                      d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"
+                    />
+                    <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />
+                    <line x1="16" y1="5" x2="19" y2="8" /></svg>
+                  EDIT
+                </button>
+                <button
+                  type="submit"
+                  class="inline text-white bg-red-700 rounded-sm hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 font-medium text-xs px-2 py-1.5 text-center"
+                  @click="deleteExperiment(exp)"
+                >
+                  <svg
+                    class="inline h-5 w-5 text-white"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" />
+                    <line x1="4" y1="7" x2="20" y2="7" />
+                    <line x1="10" y1="11" x2="10" y2="17" />
+                    <line x1="14" y1="11" x2="14" y2="17" />
+                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+                </button>
               </div>
             </td>
           </tr>
@@ -140,17 +209,26 @@ export default {
       this.loadedExperiment = n;
     },
     deleteExperiment(experiment) {
-      for (const vg of experiment.variantGroups) {
-        for (const bucketId of vg.buckets) {
-          for (const b of this.buckets) {
-            if (b.bucketNumber === bucketId && b.isInExperiment) {
-              b.isInExperiment = false;
+      if (experiment.status === 'running') {
+        this.$dtoast.pop({
+          preset: 'error',
+          heading: 'You cannot delete a RUNNING experiment!',
+          content:  'Please end it first!',
+        });
+      } else {
+        for (const vg of experiment.variantGroups) {
+          for (const bucketId of vg.buckets) {
+            for (const b of this.buckets) {
+              if (b.bucketNumber === bucketId && b.isInExperiment) {
+                b.isInExperiment = false;
+              }
             }
+            vg.buckets = [];
           }
-          vg.buckets = [];
         }
+        this.$store.commit('DELETE_EXPERIMENT', experiment);
       }
-      this.$store.commit('DELETE_EXPERIMENT', experiment);
+
     },
     editExperiment(experiment) {
       this.loadedExperiment = experiment;

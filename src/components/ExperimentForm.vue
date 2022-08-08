@@ -10,11 +10,40 @@
         <input v-model="loadedExperiment.populationAllocation" type="number" max="100" min="1" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " required @change="reCalculate()">
         <span class="text-gray-500 text-sm">{{ getPopulationData(loadedExperiment).userCount }} Users - {{ getPopulationData(loadedExperiment).bucketCount }} Buckets (est)</span>
       </div>
-      <div class="w-1/4">
+      <div class="w-1/2">
         <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300">Mix Panel Project Token</label>
         <input v-model="loadedExperiment.mixPanelExperimentToken" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " @change="mixPanelSlug()">
       </div>
-      <div class="w-1/4">
+    </div>
+    <div class="w-full flex gap-4">
+      <div class="w-1/2 ">
+        <label class="block mb-2 text-sm font-bold text-gray-900 ">Hypothesis</label>
+        <input
+          v-model="loadedExperiment.hypothesis"
+          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+          placeholder="Experiment Hypothesis"
+          required
+        />
+      </div>
+      <div class="w-1/6 ">
+        <label class="block mb-2 text-sm font-bold text-gray-900 ">Start Date</label>
+        <input
+          v-model="loadedExperiment.startDate"
+          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+          placeholder="Experiment Starting Date"
+          required
+        />
+      </div>
+      <div class="w-1/6 ">
+        <label class="block mb-2 text-sm font-bold text-gray-900 ">End Date</label>
+        <input
+          v-model="loadedExperiment.endDate"
+          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+          placeholder="Experiment Ending Date"
+          required
+        />
+      </div>
+      <div class="w-1/6">
         <label class="block mb-2 text-sm font-bold text-gray-900 ">Experiment Status</label>
         <select id="countries" v-model="loadedExperiment.status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
           <option value="inactive">INACTIVE</option>
@@ -25,8 +54,8 @@
         </select>
       </div>
     </div>
-    <div class="flex w-full gap-4 mb-6">
-      <div class="w-2/3">
+    <div class="flex w-full gap-4 mb-6 mt-8">
+      <div class="w-full">
         <h3 class="mb-2 text-sm font-bold">Variant Groups</h3>
         <div v-if="loadedExperiment.variantGroups" class="bg-gray-100 rounded-md p-4  mb-6">
           <template v-if="loadedExperiment.variantGroups.length>0">
@@ -73,10 +102,6 @@
           </template>
         </div>
       </div>
-      <div class="w-1/3">
-        <label for="message" class="block mb-2  text-sm font-bold text-gray-900 ">Overall Experiment Hypothesis</label>
-        <textarea id="message" rows="10" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Your hypothesis for this experiment..."></textarea>
-      </div>
     </div>
 
     <div class="flex flex-row-reverse space-x-4 space-x-reverse">
@@ -94,7 +119,8 @@ import {
   generateUUID
 } from '../helpers/utils.js';
 import {
-  getExperimentPopulationData
+  getExperimentPopulationData,
+  recalculateVariantAllocation
 } from '../helpers/bucketFunctions.js';
 
 export default {
@@ -127,18 +153,11 @@ export default {
 
       return data;
     },
-    reCalculate() {
-      const d = this.getPopulationData(this.loadedExperiment);
-      let startingBucketRange = -1;
-      for (let i = 0; i<this.loadedExperiment.variantGroups.length; i++) {
-        const vg = this.loadedExperiment.variantGroups[i];
-        const bucketCount = parseInt(d.bucketCount*(vg.populationAllocation/100));
-        vg.bucketRange.start = startingBucketRange+1;
-        vg.bucketRange.end = startingBucketRange+=bucketCount;
-      }
-    },
     mixPanelSlug() {
       this.loadedExperiment.mixPanelExperimentToken = sluggify(this.loadedExperiment.mixPanelExperimentToken);
+    },
+    reCalculate() {
+      recalculateVariantAllocation(this.loadedExperiment, this.users.length);
     },
     emptyBuckets(experiment) {
       for (const vg of experiment.variantGroups) {
@@ -198,22 +217,16 @@ export default {
         that.loadedExperiment = null;
       },400);
     },
-    recalculateVariantAllocation() {
-      const count = this.loadedExperiment.variantGroups.length;
-      // Recaulate the allocation % to equal 100
-      this.loadedExperiment.variantGroups.forEach((vg, index)=>{
-        vg.populationAllocation = (100/count).toFixed(0);
-      });
-    },
+
     removeVariant(treatment) {
       this.loadedExperiment.variantGroups.splice(this.loadedExperiment.variantGroups.indexOf(treatment), 1);
-      this.recalculateVariantAllocation();
+      this.reCalculate();
     },
     addNewVariant() {
       const data = newVariant;
       newVariant.id = generateUUID();
       this.loadedExperiment.variantGroups.push(data);
-      this.recalculateVariantAllocation();
+      this.reCalculate();
     }
   }
 };

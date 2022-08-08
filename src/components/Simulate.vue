@@ -27,6 +27,14 @@
       </div>
       <div v-if="impersonator!=null" class="w-1/2 bg-gray-100 p-8 rounded-md shadow-lg">
         <h4 class="font-semibold text-lg mb-4">Impression Data from User</h4>
+        <h3 class="font-semibold text-md mb-4">
+          <span v-if="impersonator.experiment==null">
+            Not In Any Experiment - ( Default Site )
+          </span>
+          <span v-else>
+            {{ impersonator.experiment.name }} - ( {{ impersonator.experiment.variant }} )
+          </span>
+        </h3>
         <div class=" text-gray-900 p-2 text-xs bg-white">
           <span v-if="impersonator.experiment!=null">
             <p>Mixpanel Project Token : <b>{{ impersonator.experiment.mixPanelData.token }}</b></p>

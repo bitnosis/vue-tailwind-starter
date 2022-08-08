@@ -28,6 +28,23 @@ function getUserBucket(userId) {
   return bucketNumberForUser;
 }
 
+function recalculateVariantAllocation(experiment, totalUsers) {
+  const popData = getExperimentPopulationData(experiment, totalUsers);
+  const count = experiment.variantGroups.length;
+  let startingBucketRange = -1;
+  // Recaulate the allocation % to equal 100
+  experiment.variantGroups.forEach((vg, index) => {
+    vg.populationAllocation = (100 / count).toFixed(0);
+    const bucketCount = parseInt(
+      popData.bucketCount * (vg.populationAllocation / 100)
+    );
+    vg.bucketRange.start = startingBucketRange += 1;
+    vg.bucketRange.end = startingBucketRange += bucketCount;
+  });
+
+  return experiment;
+}
+
 function averageUsersPerBucket(userCount) {
   return userCount / NUMBER_OF_STATIC_BUCKETS;
 }
@@ -180,5 +197,6 @@ module.exports = {
   averageUsersPerBucket,
   getExperimentPopulationData,
   findNextAvailableBucket,
-  getBucketStatus
+  getBucketStatus,
+  recalculateVariantAllocation
 };

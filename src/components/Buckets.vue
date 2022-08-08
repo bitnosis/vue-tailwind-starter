@@ -9,12 +9,13 @@
           {{ exp.variant }}
         </div>
       </div>
+      <p style="font-size:9px;">{{ averageUsers() }} Users / Bucket</p>
     </div>
   </div>
 </template>
 
 <script>
-import { getUserExperimentList } from '../helpers/bucketFunctions.js';
+import { getUserExperimentList, averageUsersPerBucket } from '../helpers/bucketFunctions.js';
 export default {
   name: 'Buckets',
   computed: {
@@ -23,9 +24,17 @@ export default {
     },
     experiments() {
       return this.$store.getters.getExperiments;
+    },
+    userCount() {
+      return this.$store.getters.getUsers.length;
     }
   },
   methods:{
+    averageUsers() {
+      const n = averageUsersPerBucket(this.userCount);
+
+      return n.toFixed(0);
+    },
     userExperiments(bucketId) {
       return getUserExperimentList(this.experiments, bucketId);
     },
