@@ -135,10 +135,10 @@ export default {
     },
     generateChart() {
       const that = this;
-      this.getUserCounts();
       setTimeout(function() {
         that.bucketData = that.getBucketData();
         that.generatingNewData = false;
+        that.getUserCounts();
       },1000);
     },
     resetExperiments() {
