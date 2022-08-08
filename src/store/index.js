@@ -117,6 +117,26 @@ export default new Vuex.Store({
       commit("SET_BUCKETS", state.buckets);
       commit("SET_BUCKET_INFO", data);
     },
+    equallyDivideBuckets({ commit, state }, data) {
+      const userCount = state.users.length;
+      state.buckets = generateBuckets(data.count);
+      const usersPerBucket = parseInt(userCount / state.buckets.length);
+      state.bucketInfo = data;
+      let count = 0;
+      let bucketIndex = 1;
+      for (let i = 0; i < state.users.length; i++) {
+        if (count < usersPerBucket) {
+          count++;
+          state.users[i].bucketId = bucketIndex;
+        } else {
+          bucketIndex += 1;
+          count = 0;
+        }
+      }
+      commit("SET_USERS", state.users);
+      commit("SET_BUCKETS", state.buckets);
+      commit("SET_BUCKET_INFO", data);
+    },
     setPage({ commit }, page) {
       commit("SET_PAGE", page);
     },

@@ -13,11 +13,14 @@
         <label class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300">Bucket Seed</label>
         <input v-model="bucketSeedInfo.seed" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 " required @change="reCalculate()">
       </div>
-      <button type="submit" class="float-right mt-6 text-white bg-blue-700 rounded-sm shadow-md hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold text-sm px-3 py-1.5 text-center" @click="resetBucketsAndUsers()">
-        Generate New Users & Buckets
+      <button type="submit" class="w-1/6 float-right mt-6 text-white bg-blue-700 rounded-sm shadow-md hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold text-sm px-3 py-1.5 text-center" @click="resetBucketsAndUsers()">
+        Generate Fresh Users
       </button>
       <button type="submit" class="mt-6 float-right text-white bg-yellow-600 rounded-sm shadow-md hover:bg-yellow-700 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-bold  text-sm px-3 py-1.5 text-center" @click="reHashBuckets()">
         Re-Hash Buckets
+      </button>
+      <button type="submit" class="mt-6 float-right text-white bg-purple-600 rounded-sm shadow-md hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-bold  text-sm px-3 py-1.5 text-center" @click="equallyDivideBuckets()">
+        Equally Divide Buckets
       </button>
     </div>
     <div v-if="!generatingNewData" class="w-full mt-8 mb-8 flex">
@@ -137,18 +140,23 @@ export default {
         that.generatingNewData = false;
       },1000);
     },
-    resetBucketsAndUsers() {
+    resetExperiments() {
       this.bucketData = null;
       this.generatingNewData = true;
       this.$store.dispatch('resetExperiments');
+    },
+    equallyDivideBuckets() {
+      this.resetExperiments();
+      this.$store.dispatch('equallyDivideBuckets', this.bucketSeedInfo);
+      this.generateChart();
+    },
+    resetBucketsAndUsers() {
+      this.resetExperiments();
       this.$store.dispatch('resetUsersAndBuckets', this.bucketSeedInfo);
       this.generateChart();
-
     },
     reHashBuckets() {
-      this.bucketData = null;
-      this.generatingNewData = true;
-      this.$store.dispatch('resetExperiments');
+      this.resetExperiments();
       this.$store.dispatch('reHashBuckets', this.bucketSeedInfo);
       this.generateChart();
     },
